@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MUL-MUL ENGLISH — Belajar dari Nol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFF3EA; --paper-alt:#E6ECDF; --ink:#1E2A38; --navy:#1F3A5F;
+    --stamp-red:#B23A2E; --stamp-gold:#B9852A; --teal:#2F6F62; --line:#C9C2A6; --white:#FCFBF6;
+    font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141A22; --paper-alt:#1B222C; --ink:#EAEFE8; --navy:#8FB3DB;
+      --stamp-red:#E07A6A; --stamp-gold:#E0AE5C; --teal:#6FBBA8; --line:#3A4250; --white:#1B222C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141A22; --paper-alt:#1B222C; --ink:#EAEFE8; --navy:#8FB3DB;
+    --stamp-red:#E07A6A; --stamp-gold:#E0AE5C; --teal:#6FBBA8; --line:#3A4250; --white:#1B222C;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  html,body{height:100%;}
+  body{ margin:0; background:var(--paper); color:var(--ink);
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+    -webkit-font-smoothing:antialiased; }
+  .stamp-font{ font-family:'Special Elite','Courier New',monospace; }
+
+  header.cover{ background:var(--navy); color:var(--white); padding:1.7rem 1.5rem 1.3rem;
+    padding-top:calc(1.7rem + env(safe-area-inset-top,0px)); text-align:center;
+    border-bottom:3px solid var(--stamp-gold); position:relative; }
+  header.cover .eagle{ font-size:1.8rem; margin-bottom:.3rem; display:block;}
+  header.cover h1{ font-family:'Special Elite','Courier New',monospace; font-size:clamp(1.25rem,4.5vw,1.9rem); letter-spacing:.03em; margin:0 0 .2rem;}
+  header.cover p{ margin:0; opacity:.85; font-size:.88rem;}
+  header.cover .who{ position:absolute; top:calc(1rem + env(safe-area-inset-top,0px)); right:1rem; font-size:.75rem; opacity:.85; text-align:right; max-width:120px;}
+
+  nav.tabs{ display:flex; overflow-x:auto; background:var(--paper-alt); border-bottom:2px solid var(--line); position:sticky; top:0; z-index:10;}
+  nav.tabs button{ flex:1 0 auto; padding:.85rem 1rem; background:none; border:none; cursor:pointer;
+    font-family:'Manrope',sans-serif; font-weight:700; font-size:.88rem; color:var(--ink); opacity:.55;
+    border-bottom:3px solid transparent; white-space:nowrap; transition:opacity .15s,border-color .15s;}
+  nav.tabs button:focus-visible{ outline:2px solid var(--teal); outline-offset:-2px;}
+  nav.tabs button.active{ opacity:1; border-bottom-color:var(--stamp-red);}
+
+  main{ max-width:760px; margin:0 auto; padding:1.5rem 1.1rem 3rem;}
+  .page{ display:none; } .page.active{ display:block; }
+
+  .panel{ background:var(--white); border:1.5px solid var(--line); padding:1.3rem 1.2rem; margin-bottom:1.2rem;}
+  .panel h2{ font-family:'Special Elite','Courier New',monospace; font-size:1.1rem; margin:0 0 .7rem; color:var(--navy);}
+
+  button.stampbtn{ font-family:'Manrope',sans-serif; font-weight:800; font-size:.92rem;
+    background:var(--navy); color:var(--white); border:none; padding:.7rem 1.2rem; cursor:pointer;}
+  button.stampbtn.secondary{ background:transparent; color:var(--navy); border:2px solid var(--navy);}
+  button.stampbtn:focus-visible{ outline:2px solid var(--stamp-red); outline-offset:2px;}
+  button.stampbtn:disabled{ opacity:.5; cursor:not-allowed; }
+
+  #onboarding{ max-width:420px; margin:2rem auto; padding:1.6rem; }
+  #onboarding .badge{ width:80px; height:80px; border:2.5px solid var(--stamp-red); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; transform:rotate(-6deg);
+    font-family:'Special Elite',monospace; font-size:.68rem; color:var(--stamp-red); text-align:center;}
+  #onboarding label{ display:block; font-weight:700; font-size:.85rem; margin:1rem 0 .4rem;}
+  #onboarding input[type=text]{ width:100%; padding:.65rem .8rem; border:1.5px solid var(--line);
+    background:var(--paper-alt); color:var(--ink); font-size:1rem; font-family:inherit;}
+  .level-row{ display:flex; gap:.5rem; flex-wrap:wrap; }
+  .level-row button{ flex:1 1 auto; border:1.5px solid var(--line); background:var(--white); padding:.6rem .5rem;
+    cursor:pointer; font-weight:700; font-size:.85rem; color:var(--ink);}
+  .level-row button.active{ background:var(--navy); color:var(--white); border-color:var(--navy);}
+
+  .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:.7rem; margin-top:.8rem;}
+  .stat-card{ border:1.5px solid var(--line); padding:.8rem; text-align:center; background:var(--paper-alt);}
+  .stat-card .num{ font-family:'Special Elite',monospace; font-size:1.5rem; color:var(--navy);}
+  .stat-card .lbl{ font-size:.75rem; opacity:.7; margin-top:.15rem;}
+  .sync-note{ font-size:.78rem; opacity:.65; margin-top:.8rem; text-align:center; }
+
+  .road-section{ margin-bottom:1rem; }
+  .road-section h3{ font-size:.85rem; letter-spacing:.02em; color:var(--stamp-gold); font-weight:800; margin:0 0 .5rem; }
+  .road-item{ display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+    border:1.5px solid var(--line); padding:.65rem .8rem; margin-bottom:.5rem; cursor:pointer; background:var(--white);}
+  .road-item.locked{ opacity:.55; cursor:default; }
+  .road-item .rt{ font-weight:700; font-size:.9rem; }
+  .road-item .rs{ font-size:.75rem; opacity:.7; }
+  .road-item .check{ color:var(--teal); font-weight:800; }
+  .road-item .lock{ font-size:.8rem; }
+
+  #lesson-detail .back{ background:none; border:none; color:var(--navy); font-weight:700; cursor:pointer;
+    padding:0; margin-bottom:.8rem; font-size:.85rem; }
+  .example{ background:var(--paper-alt); border-left:3px solid var(--stamp-gold); padding:.6rem .8rem;
+    margin:.5rem 0; font-size:.92rem; line-height:1.5; }
+  .example em{ color:var(--teal); font-style:normal; font-weight:700; }
+  .practice-item{ border-top:1px solid var(--line); padding-top:.8rem; margin-top:.8rem; }
+  .practice-item p.q{ font-weight:700; margin-bottom:.5rem; }
+  .opt-row{ display:flex; gap:.5rem; flex-wrap:wrap; }
+  .opt-row button{ border:1.5px solid var(--line); background:var(--white); padding:.45rem .85rem;
+    cursor:pointer; font-size:.88rem; font-weight:600; color:var(--ink);}
+  .opt-row button.correct{ background:var(--teal); border-color:var(--teal); color:var(--white);}
+  .opt-row button.wrong{ background:var(--stamp-red); border-color:var(--stamp-red); color:var(--white);}
+  .fb{ margin-top:.5rem; font-size:.85rem; font-weight:700; min-height:1.2em;}
+  .fb.ok{ color:var(--teal);} .fb.bad{ color:var(--stamp-red);}
+
+  .cat-list{ display:flex; gap:.6rem; overflow-x:auto; padding-bottom:.4rem; margin-bottom:1rem;}
+  .cat-list button{ flex:0 0 auto; padding:.5rem .9rem; border:1.5px solid var(--line); background:var(--white);
+    font-weight:700; font-size:.82rem; cursor:pointer; color:var(--ink); white-space:nowrap;}
+  .cat-list button.active{ background:var(--navy); color:var(--white); border-color:var(--navy);}
+  .flashcard-wrap{ display:flex; flex-direction:column; align-items:center; gap:.9rem;}
+  .flashcard{ width:100%; max-width:340px; height:170px; perspective:1000px; cursor:pointer;}
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d;}
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg);}
+  .face{ position:absolute; inset:0; backface-visibility:hidden; border:2px solid var(--navy);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--white); padding:1rem; text-align:center;}
+  .face .lang-label{ font-size:.68rem; letter-spacing:.08em; color:var(--stamp-gold); font-weight:800; margin-bottom:.4rem;}
+  .face .word{ font-size:1.35rem; font-weight:800;}
+  .face.back{ transform:rotateY(180deg); background:var(--paper-alt);}
+  .flip-hint{ font-size:.75rem; opacity:.6;}
+  .card-controls{ display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; justify-content:center;}
+  .card-controls button{ border:1.5px solid var(--line); background:var(--white); padding:.45rem .8rem; cursor:pointer; font-weight:700; font-size:.82rem; color:var(--ink);}
+  .card-controls button.learned{ border-color:var(--teal); color:var(--teal);}
+  .card-counter{ font-size:.8rem; opacity:.65;}
+
+  .practice-grid{ display:grid; gap:.8rem; }
+  .qz-card{ border:1.5px solid var(--line); padding:1rem; background:var(--white); cursor:pointer;}
+  .qz-card h3{ margin:0 0 .3rem; font-size:1rem; color:var(--navy);}
+  .qz-card p{ margin:0; font-size:.85rem; opacity:.75;}
+  .qz-card .best{ font-size:.78rem; color:var(--teal); font-weight:700; margin-top:.4rem;}
+
+  .qz-progress{ font-size:.8rem; opacity:.65; margin-bottom:.5rem;}
+  .qz-bar{ height:6px; background:var(--line); margin-bottom:1rem;}
+  .qz-bar-fill{ height:100%; background:var(--stamp-gold); transition:width .3s;}
+  #quiz-result .score{ font-family:'Special Elite',monospace; font-size:2.2rem; color:var(--navy); margin:.5rem 0; text-align:center;}
+  #quiz-result{ text-align:center; }
+
+  .reading-box{ background:var(--paper-alt); border:1.5px solid var(--line); padding:1rem; margin-bottom:1rem; line-height:1.6; font-size:.95rem;}
+  .reading-q{ margin-bottom:1rem; }
+  .reading-q p.q{ font-weight:700; margin-bottom:.4rem; }
+
+  .prog-row{ margin-bottom:1.1rem; }
+  .prog-row .top{ display:flex; justify-content:space-between; font-size:.85rem; font-weight:700; margin-bottom:.35rem;}
+  .prog-bar{ height:10px; background:var(--paper-alt); border:1px solid var(--line);}
+  .prog-fill{ height:100%; background:var(--teal); }
+  .streak-box{ text-align:center; padding:1rem; }
+  .streak-box .flame{ font-size:2rem; }
+  .streak-box .num{ font-family:'Special Elite',monospace; font-size:1.8rem; color:var(--stamp-red);}
+
+  footer{ text-align:center; padding:1.1rem; font-size:.76rem; opacity:.55;}
+  .wide-scroll{ overflow-x:auto; }
+</style>
+</head>
+<body>
+
+<div id="onboarding-page">
+  <header class="cover"><span class="eagle">✈️📘</span><h1>MUL-MUL ENGLISH</h1><p>Perjalanan belajar Bahasa Inggris untuk pemula</p></header>
+  <div class="panel" id="onboarding">
+    <div class="badge">HALO<br>WORLD</div>
+    <h2 class="stamp-font" style="text-align:center;font-size:1.15rem;">Buat profil belajarmu</h2>
+    <p style="text-align:center; opacity:.8; font-size:.9rem;" id="onb-sub">Isi namamu dan pilih levelmu untuk mulai.</p>
+    <label for="onb-name">Nama</label>
+    <input type="text" id="onb-name" placeholder="Nama kamu">
+    <label>Level Bahasa Inggris</label>
+    <div class="level-row" id="onb-level">
+      <button data-lvl="Pemula" class="active">Pemula</button>
+      <button data-lvl="Menengah">Menengah</button>
+      <button data-lvl="Mahir">Mahir</button>
+    </div>
+    <div style="margin-top:1.2rem; text-align:center;">
+      <button class="stampbtn" id="onb-start" style="width:100%;">Mulai Belajar</button>
+    </div>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
+<header class="cover">
+  <span class="eagle">✈️📘</span>
+  <h1>MUL-MUL ENGLISH</h1>
+  <p>Perjalanan belajar Bahasa Inggris untuk pemula</p>
+  <div class="who" id="who-label"></div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-page="dashboard">Dashboard</button>
+  <button class="tab-btn" data-page="lesson">Lesson</button>
+  <button class="tab-btn" data-page="practice">Practice</button>
+  <button class="tab-btn" data-page="progress">Progress</button>
+</nav>
+
+<main>
+
+  <section id="dashboard" class="page active">
+    <div class="panel">
+      <h2 id="dash-greeting">Halo!</h2>
+      <p style="margin:0 0 .5rem; opacity:.8;">Level: <strong id="dash-level"></strong></p>
+      <div class="stat-grid" id="dash-stats"></div>
+      <div style="margin-top:1.1rem; text-align:center;">
+        <button class="stampbtn" id="dash-continue">Lanjutkan Belajar</button>
+      </div>
+      <p class="sync-note" id="sync-note"></p>
+    </div>
+  </section>
+
+  <section id="lesson" class="page">
+    <div class="panel" id="lesson-list-panel">
+      <h2>Kosakata Dasar</h2>
+      <div class="cat-list wide-scroll" id="cat-list"></div>
+      <div class="flashcard-wrap">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="flashcard-inner" id="flashcard-inner">
+            <div class="face front"><span class="lang-label">ENGLISH</span><span class="word" id="word-en"></span><span class="flip-hint">(ketuk untuk membalik)</span></div>
+            <div class="face back"><span class="lang-label">BAHASA INDONESIA</span><span class="word" id="word-id"></span></div>
+          </div>
+        </div>
+        <div class="card-controls">
+          <button onclick="prevCard()">← Sebelumnya</button>
+          <button id="learn-btn" class="learned" onclick="markLearned()">✓ Sudah hafal</button>
+          <button onclick="nextCard()">Berikutnya →</button>
+        </div>
+        <div class="card-counter" id="card-counter"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Roadmap Tata Bahasa</h2>
+      <div id="roadmap"></div>
+    </div>
+    <div class="panel" id="lesson-detail" style="display:none;"></div>
+  </section>
+
+  <section id="practice" class="page">
+    <div class="panel" id="practice-menu">
+      <h2>Practice</h2>
+      <div class="practice-grid">
+        <div class="qz-card" onclick="startQuiz('grammar')">
+          <h3>Grammar Quiz</h3><p>Soal acak dari semua pelajaran tata bahasa yang tersedia.</p>
+          <div class="best" id="best-grammar"></div>
+        </div>
+        <div class="qz-card" onclick="startQuiz('vocabulary')">
+          <h3>Vocabulary Quiz</h3><p>Uji hafalan kosakata dasar kamu.</p>
+          <div class="best" id="best-vocabulary"></div>
+        </div>
+        <div class="qz-card" onclick="startReadingQuiz()">
+          <h3>Reading Quiz</h3><p>Baca teks pendek lalu jawab pertanyaan pemahaman.</p>
+          <div class="best" id="best-reading"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" id="quiz-area-panel" style="display:none;">
+      <div class="qz-progress" id="qz-progress"></div>
+      <div class="qz-bar"><div class="qz-bar-fill" id="qz-bar-fill"></div></div>
+      <p class="q" id="qz-question" style="font-weight:700;"></p>
+      <div class="opt-row" id="qz-options"></div>
+      <div class="fb" id="qz-fb"></div>
+    </div>
+    <div class="panel" id="reading-area-panel" style="display:none;"></div>
+    <div class="panel" id="quiz-result-panel" style="display:none;">
+      <div id="quiz-result">
+        <p style="margin:0;">Hasil kamu:</p>
+        <div class="score" id="qz-score"></div>
+        <p id="qz-message" style="opacity:.8;"></p>
+        <button class="stampbtn" onclick="backToPracticeMenu()">Kembali ke Practice</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="progress" class="page">
+    <div class="panel">
+      <h2>Overall Progress</h2>
+      <div class="prog-row">
+        <div class="top"><span>Keseluruhan</span><span id="p-overall-pct"></span></div>
+        <div class="prog-bar"><div class="prog-fill" id="p-overall-fill"></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Grammar Progress</h2>
+      <div class="prog-row">
+        <div class="top"><span id="p-grammar-label"></span><span id="p-grammar-pct"></span></div>
+        <div class="prog-bar"><div class="prog-fill" id="p-grammar-fill"></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Vocabulary Progress</h2>
+      <div class="prog-row">
+        <div class="top"><span id="p-vocab-label"></span><span id="p-vocab-pct"></span></div>
+        <div class="prog-bar"><div class="prog-fill" id="p-vocab-fill"></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Quiz Scores</h2>
+      <div class="prog-row"><div class="top"><span>Grammar Quiz</span><span id="qs-grammar"></span></div></div>
+      <div class="prog-row"><div class="top"><span>Vocabulary Quiz</span><span id="qs-vocabulary"></span></div></div>
+      <div class="prog-row"><div class="top"><span>Reading Quiz</span><span id="qs-reading"></span></div></div>
+    </div>
+    <div class="panel streak-box">
+      <div class="flame">🔥</div>
+      <div class="num" id="p-streak"></div>
+      <div style="font-size:.85rem; opacity:.7;">hari beruntun dibuka</div>
+    </div>
+  </section>
+
+</main>
+<footer>MUL-MUL ENGLISH — belajar sedikit demi sedikit, setiap hari.</footer>
+</div>
+
+<script>
+const VOCAB = {
+  "Salam & Perkenalan": [["Hello","Halo"],["Good morning","Selamat pagi"],["Good afternoon","Selamat siang"],
+    ["Good evening","Selamat malam"],["Goodbye","Selamat tinggal"],["Thank you","Terima kasih"],
+    ["Please","Tolong / Silakan"],["Sorry","Maaf"],["Yes","Ya"],["No","Tidak"],
+    ["My name is...","Nama saya..."],["Nice to meet you","Senang bertemu denganmu"]],
+  "Angka": [["One","Satu"],["Two","Dua"],["Three","Tiga"],["Four","Empat"],["Five","Lima"],
+    ["Six","Enam"],["Seven","Tujuh"],["Eight","Delapan"],["Nine","Sembilan"],["Ten","Sepuluh"]],
+  "Keluarga": [["Mother","Ibu"],["Father","Ayah"],["Sister","Saudara perempuan"],["Brother","Saudara laki-laki"],
+    ["Grandmother","Nenek"],["Grandfather","Kakek"],["Child","Anak"],["Wife","Istri"],["Husband","Suami"],["Friend","Teman"]],
+  "Warna": [["Red","Merah"],["Blue","Biru"],["Yellow","Kuning"],["Green","Hijau"],["Black","Hitam"],
+    ["White","Putih"],["Orange","Oranye"],["Purple","Ungu"],["Pink","Merah muda"],["Brown","Cokelat"]],
+  "Aktivitas Sehari-hari": [["Eat","Makan"],["Drink","Minum"],["Sleep","Tidur"],["Wake up","Bangun tidur"],["Work","Bekerja"],
+    ["Study","Belajar"],["Cook","Memasak"],["Read","Membaca"],["Write","Menulis"],["Walk","Berjalan"]]
+};
+
+const LESSON_CONTENT = {
+  spresent:{ title:"Simple Present",
+    body:"Dipakai untuk kebiasaan, rutinitas, atau fakta umum. Rumus: Subjek + Kata Kerja (tambah -s/-es untuk he/she/it).",
+    examples:[["I <em>work</em> every day.","Saya bekerja setiap hari."],["She <em>works</em> every day.","Dia bekerja setiap hari."],["They <em>don't like</em> coffee.","Mereka tidak suka kopi."]],
+    practice:[{q:"She ___ to school every morning.",options:["go","goes","going"],answer:"goes"},
+      {q:"They ___ pizza on weekends.",options:["eats","eat","eating"],answer:"eat"}] },
+  pcont:{ title:"Present Continuous",
+    body:"Dipakai untuk kegiatan yang sedang berlangsung sekarang. Rumus: Subjek + am/is/are + Verb-ing.",
+    examples:[["I <em>am reading</em> a book now.","Saya sedang membaca buku sekarang."],["He <em>is cooking</em> dinner.","Dia sedang memasak makan malam."]],
+    practice:[{q:"Right now, he ___ (study).",options:["study","studies","is studying"],answer:"is studying"},
+      {q:"We ___ (watch) a movie at the moment.",options:["are watching","watch","watched"],answer:"are watching"}] },
+  pperfect:{ title:"Present Perfect",
+    body:"Dipakai untuk pengalaman atau kejadian yang selesai tanpa menyebutkan waktu pasti. Rumus: Subjek + have/has + Verb 3.",
+    examples:[["I <em>have visited</em> Bali twice.","Saya sudah mengunjungi Bali dua kali."],["She <em>has finished</em> her homework.","Dia sudah menyelesaikan PR-nya."]],
+    practice:[{q:"They ___ (live) here for five years.",options:["have lived","lived","living"],answer:"have lived"},
+      {q:"He ___ (never, try) sushi.",options:["never tried","has never tried","never tries"],answer:"has never tried"}] },
+  pperfectcont:{ title:"Present Perfect Continuous",
+    body:"Dipakai untuk kegiatan yang mulai di masa lalu dan masih berlangsung sampai sekarang, menekankan durasi. Rumus: Subjek + have/has + been + Verb-ing.",
+    examples:[["I <em>have been studying</em> for two hours.","Saya sudah belajar selama dua jam (dan masih berlangsung)."],["It <em>has been raining</em> since morning.","Hujan sudah turun sejak pagi."]],
+    practice:[{q:"She ___ (wait) for the bus since 7 AM.",options:["has been waiting","have been waiting","waited"],answer:"has been waiting"},
+      {q:"We ___ (work) on this project for a month.",options:["have been working","has been working","worked"],answer:"have been working"}] },
+  spast:{ title:"Simple Past",
+    body:"Dipakai untuk kejadian yang sudah selesai di masa lalu, biasanya dengan keterangan waktu. Rumus: Subjek + Verb 2.",
+    examples:[["I <em>visited</em> Bandung last year.","Saya mengunjungi Bandung tahun lalu."],["She <em>did not go</em> to the party.","Dia tidak pergi ke pesta."]],
+    practice:[{q:"He ___ (go) to school yesterday.",options:["goes","went","going"],answer:"went"},
+      {q:"They ___ (not, watch) TV last night.",options:["not watched","didn't watch","doesn't watch"],answer:"didn't watch"}] },
+  pastcont:{ title:"Past Continuous",
+    body:"Dipakai untuk kegiatan yang sedang berlangsung di masa lalu, sering terputus kejadian lain. Rumus: Subjek + was/were + Verb-ing.",
+    examples:[["I <em>was cooking</em> when you called.","Saya sedang memasak ketika kamu menelepon."],["They <em>were playing</em> football at 5 PM.","Mereka sedang bermain sepak bola jam 5 sore."]],
+    practice:[{q:"She ___ (sleep) when the phone rang.",options:["was sleeping","were sleeping","slept"],answer:"was sleeping"},
+      {q:"We ___ (walk) home when it started to rain.",options:["was walking","were walking","walked"],answer:"were walking"}] },
+  pastperfect:{ title:"Past Perfect",
+    body:"Dipakai untuk kejadian yang sudah selesai sebelum kejadian lain di masa lalu. Rumus: Subjek + had + Verb 3.",
+    examples:[["I <em>had finished</em> dinner before he arrived.","Saya sudah selesai makan malam sebelum dia tiba."],["She <em>had left</em> before we came.","Dia sudah pergi sebelum kami datang."]],
+    practice:[{q:"By the time we arrived, the movie ___ (start).",options:["had started","has started","started"],answer:"had started"},
+      {q:"He ___ (already, eat) when I called him.",options:["already ate","had already eaten","has already eaten"],answer:"had already eaten"}] },
+  pastperfectcont:{ title:"Past Perfect Continuous",
+    body:"Dipakai untuk kegiatan yang berlangsung sampai suatu titik tertentu di masa lalu, menekankan durasi. Rumus: Subjek + had + been + Verb-ing.",
+    examples:[["They <em>had been waiting</em> for an hour before the bus came.","Mereka sudah menunggu satu jam sebelum bus datang."],["He <em>had been working</em> for 3 hours before he took a break.","Dia sudah bekerja 3 jam sebelum istirahat."]],
+    practice:[{q:"She ___ (study) for two hours before dinner was ready.",options:["had been studying","has been studying","studied"],answer:"had been studying"},
+      {q:"We ___ (play) outside before it started to rain.",options:["had been playing","have been playing","played"],answer:"had been playing"}] },
+  sva:{ title:"Subject–Verb Agreement",
+    body:"Kata kerja harus 'setuju' dengan subjeknya. Beberapa aturan: everyone/someone/nobody dianggap tunggal; each/every + kata benda dianggap tunggal; either...or / neither...nor mengikuti subjek terdekat; kata benda kolektif (team, family) biasanya tunggal; frasa preposisi setelah subjek tidak mengubah jumlah kata kerja.",
+    examples:[["<em>Everyone is</em> ready.","Semua orang sudah siap."],["<em>Each</em> student <em>has</em> a book.","Setiap murid punya buku."],
+      ["<em>The team is</em> winning.","Tim itu sedang menang."],["The box of chocolates <em>is</em> on the table.","Kotak berisi cokelat itu ada di meja."]],
+    practice:[{q:"Everyone ___ happy today.",options:["is","are","were"],answer:"is"},
+      {q:"Each of the students ___ a laptop.",options:["have","has","having"],answer:"has"},
+      {q:"Neither of the boys ___ ready.",options:["is","are","am"],answer:"is"},
+      {q:"The team ___ practicing every day.",options:["are","is","were"],answer:"is"},
+      {q:"The list of items ___ on the desk.",options:["is","are","were"],answer:"is"}] },
+  sfuture:{ title:"Simple Future",
+    body:"Dipakai untuk rencana, prediksi, atau keputusan spontan di masa depan. Rumus: Subjek + will + Verb dasar, atau Subjek + am/is/are + going to + Verb dasar.",
+    examples:[["I <em>will call</em> you tomorrow.","Saya akan meneleponmu besok."],["She <em>is going to travel</em> next month.","Dia akan bepergian bulan depan."],["It <em>will rain</em> this afternoon.","Akan turun hujan sore ini."]],
+    practice:[{q:"I think it ___ rain later.",options:["will","is","was"],answer:"will"},
+      {q:"They ___ going to visit their grandparents this weekend.",options:["is","are","am"],answer:"are"}] },
+  fcont:{ title:"Future Continuous",
+    body:"Dipakai untuk kegiatan yang akan sedang berlangsung pada waktu tertentu di masa depan. Rumus: Subjek + will be + Verb-ing.",
+    examples:[["I <em>will be sleeping</em> at midnight.","Saya akan sedang tidur pada tengah malam."],["She <em>will be working</em> when you arrive.","Dia akan sedang bekerja ketika kamu tiba."]],
+    practice:[{q:"At 8 PM tomorrow, we ___ (have) dinner.",options:["will be having","will have","are having"],answer:"will be having"},
+      {q:"He ___ (study) when you call him tonight.",options:["will be studying","studies","studied"],answer:"will be studying"}] },
+  fperfect:{ title:"Future Perfect",
+    body:"Dipakai untuk kejadian yang akan sudah selesai sebelum waktu tertentu di masa depan. Rumus: Subjek + will have + Verb 3.",
+    examples:[["I <em>will have finished</em> the report by Friday.","Saya akan sudah menyelesaikan laporan itu sebelum hari Jumat."],["She <em>will have graduated</em> by next year.","Dia akan sudah lulus sebelum tahun depan."]],
+    practice:[{q:"By next month, they ___ (complete) the project.",options:["will have completed","will complete","completed"],answer:"will have completed"},
+      {q:"He ___ (leave) before you arrive.",options:["will have left","will leave","has left"],answer:"will have left"}] },
+  fperfectcont:{ title:"Future Perfect Continuous",
+    body:"Dipakai untuk kegiatan yang akan sudah berlangsung selama periode tertentu sebelum suatu titik di masa depan, menekankan durasi. Rumus: Subjek + will have been + Verb-ing.",
+    examples:[["By June, I <em>will have been working</em> here for five years.","Pada bulan Juni, saya akan sudah bekerja di sini selama lima tahun."],["She <em>will have been studying</em> for three hours by the time you arrive.","Dia akan sudah belajar selama tiga jam ketika kamu tiba."]],
+    practice:[{q:"By 2027, he ___ (teach) for ten years.",options:["will have been teaching","will be teaching","has taught"],answer:"will have been teaching"},
+      {q:"We ___ (travel) for six hours by the time we land.",options:["will have been traveling","will be traveling","traveled"],answer:"will have been traveling"}] },
+  fitp:{ title:"Future in the Past",
+    body:"Dipakai untuk membicarakan sesuatu yang dianggap akan terjadi di masa depan, tetapi diceritakan dari sudut pandang masa lalu. Rumus: Subjek + would + Verb dasar (atau was/were going to + Verb dasar).",
+    examples:[["He said he <em>would call</em> me later.","Dia bilang dia akan meneleponku nanti."],["I knew she <em>was going to win</em> the race.","Saya tahu dia akan memenangkan lomba itu."]],
+    practice:[{q:"She said she ___ (visit) us the next day.",options:["would visit","will visit","visits"],answer:"would visit"},
+      {q:"They told us they ___ (move) to Jakarta.",options:["were going to move","are going to move","move"],answer:"were going to move"}] },
+  fcitp:{ title:"Future Continuous in the Past",
+    body:"Dipakai untuk kegiatan yang diperkirakan akan sedang berlangsung pada suatu waktu di masa depan, dilihat dari sudut pandang masa lalu. Rumus: Subjek + would be + Verb-ing.",
+    examples:[["He said he <em>would be traveling</em> next week.","Dia bilang dia akan sedang bepergian minggu depan."],["I knew they <em>would be waiting</em> for us at the station.","Saya tahu mereka akan sedang menunggu kami di stasiun."]],
+    practice:[{q:"She said she ___ (work) at that time tomorrow.",options:["would be working","will be working","was working"],answer:"would be working"},
+      {q:"He told me he ___ (drive) all night.",options:["would be driving","will be driving","drove"],answer:"would be driving"}] },
+  fpitp:{ title:"Future Perfect in the Past",
+    body:"Dipakai untuk kejadian yang diperkirakan akan sudah selesai sebelum suatu waktu di masa depan, dilihat dari sudut pandang masa lalu. Rumus: Subjek + would have + Verb 3.",
+    examples:[["He said he <em>would have finished</em> the work by Monday.","Dia bilang dia akan sudah menyelesaikan pekerjaan itu sebelum hari Senin."],["I thought she <em>would have arrived</em> by now.","Saya pikir dia akan sudah tiba sekarang."]],
+    practice:[{q:"She said she ___ (complete) the exam by noon.",options:["would have completed","will have completed","completed"],answer:"would have completed"},
+      {q:"We thought they ___ (leave) before we got there.",options:["would have left","will have left","left"],answer:"would have left"}] },
+  fpcitp:{ title:"Future Perfect Continuous in the Past",
+    body:"Dipakai untuk kegiatan yang diperkirakan akan sudah berlangsung selama suatu periode sebelum titik tertentu di masa depan, dilihat dari sudut pandang masa lalu. Rumus: Subjek + would have been + Verb-ing.",
+    examples:[["He said he <em>would have been working</em> there for ten years by 2025.","Dia bilang dia akan sudah bekerja di sana selama sepuluh tahun pada 2025."],["I knew she <em>would have been studying</em> for hours by dinner time.","Saya tahu dia akan sudah belajar selama berjam-jam sebelum waktu makan malam."]],
+    practice:[{q:"She said she ___ (wait) for two hours by the time he arrived.",options:["would have been waiting","will have been waiting","waited"],answer:"would have been waiting"},
+      {q:"He told us he ___ (drive) for five hours by midnight.",options:["would have been driving","will have been driving","drove"],answer:"would have been driving"}] },
+  review16:{ title:"Review Semua 16 Tenses",
+    body:"Saatnya meninjau ulang keenam belas tenses yang sudah kamu pelajari! Ingat polanya: present / past / future dikombinasikan dengan simple / continuous / perfect / perfect continuous. Kerjakan latihan campuran di bawah untuk menguji pemahamanmu.",
+    examples:[["I <em>work</em>, I <em>am working</em>, I <em>have worked</em>, I <em>have been working</em>.","Empat bentuk present: sederhana, sedang berlangsung, sudah selesai, sudah berlangsung."],["I <em>worked</em>, I <em>was working</em>, I <em>had worked</em>, I <em>had been working</em>.","Empat bentuk past."],["I <em>will work</em>, I <em>will be working</em>, I <em>will have worked</em>, I <em>will have been working</em>.","Empat bentuk future."]],
+    practice:[{q:"By next year, she ___ (finish) her degree.",options:["will have finished","finished","finishes"],answer:"will have finished"},
+      {q:"He ___ (read) a book right now.",options:["is reading","reads","read"],answer:"is reading"},
+      {q:"They ___ (live) here since 2015.",options:["have lived","lived","are living"],answer:"have lived"},
+      {q:"I ___ (eat) dinner when she called.",options:["was eating","am eating","ate"],answer:"was eating"},
+      {q:"We ___ (travel) for six hours by the time we land tomorrow.",options:["will have been traveling","traveled","travel"],answer:"will have been traveling"},
+      {q:"She said she ___ (call) me the next day.",options:["would call","will call","calls"],answer:"would call"}] },
+  articles:{ title:"Articles (A / An / The)",
+    body:"Artikel 'a' dan 'an' (artikel tak tentu) dipakai untuk benda tunggal yang belum spesifik. 'A' dipakai sebelum bunyi konsonan, 'an' sebelum bunyi vokal. Artikel 'the' (artikel tentu) dipakai untuk benda yang sudah spesifik atau sudah disebutkan sebelumnya.",
+    examples:[["I saw <em>a</em> cat in the garden.","Saya melihat seekor kucing di taman."],["She bought <em>an</em> umbrella.","Dia membeli sebuah payung."],["<em>The</em> cat I saw yesterday is back.","Kucing yang saya lihat kemarin kembali lagi."]],
+    practice:[{q:"I need ___ umbrella; it's raining.",options:["a","an","the"],answer:"an"},
+      {q:"___ sun rises in the east.",options:["A","An","The"],answer:"The"}] },
+  prepositions:{ title:"Prepositions",
+    body:"Preposisi menunjukkan hubungan antara kata benda/kata ganti dengan kata lain dalam kalimat, seperti tempat (in, on, at), waktu (in, on, at), atau arah (to, from, into).",
+    examples:[["The book is <em>on</em> the table.","Buku itu ada di atas meja."],["We arrived <em>at</em> 7 o'clock.","Kami tiba pukul 7."],["She is going <em>to</em> the market.","Dia sedang pergi ke pasar."]],
+    practice:[{q:"I was born ___ 1998.",options:["in","on","at"],answer:"in"},
+      {q:"The meeting is ___ Monday.",options:["in","on","at"],answer:"on"}] },
+  pronouns2:{ title:"Pronouns (I/Me, He/Him, dst)",
+    body:"Pronoun subjek (I, you, he, she, it, we, they) dipakai sebagai pelaku dalam kalimat, sedangkan pronoun objek (me, you, him, her, it, us, them) dipakai sebagai penerima aksi. Pronoun posesif (mine, yours, his, hers, ours, theirs) menunjukkan kepemilikan.",
+    examples:[["<em>She</em> gave the book to <em>him</em>.","Dia (perempuan) memberikan buku itu kepada dia (laki-laki)."],["This pen is <em>mine</em>, not <em>yours</em>.","Pena ini milik saya, bukan milikmu."]],
+    practice:[{q:"___ and I went to the store.",options:["Her","She","Hers"],answer:"She"},
+      {q:"Please give the letter to ___.",options:["they","them","their"],answer:"them"},
+      {q:"That bag is ___.",options:["her","hers","she"],answer:"hers"}] },
+  countable:{ title:"Countable & Uncountable Nouns",
+    body:"Countable nouns adalah kata benda yang bisa dihitung dan punya bentuk jamak (book/books). Uncountable nouns tidak bisa dihitung satu per satu dan tidak punya bentuk jamak (water, rice, information). Gunakan 'many' untuk countable dan 'much' untuk uncountable.",
+    examples:[["I have <em>many</em> books.","Saya punya banyak buku."],["There isn't <em>much</em> water left.","Tidak banyak air yang tersisa."],["She has <em>a few</em> friends here.","Dia punya beberapa teman di sini."]],
+    practice:[{q:"How ___ money do you have?",options:["many","much","few"],answer:"much"},
+      {q:"There are ___ apples on the table.",options:["much","many","a little"],answer:"many"}] },
+  modals:{ title:"Modal Verbs",
+    body:"Modal verbs (can, could, may, might, must, should, will, would, shall) dipakai bersama kata kerja dasar untuk menunjukkan kemampuan, izin, kemungkinan, keharusan, atau saran. Modal verbs tidak berubah bentuk dan tidak diikuti 'to'.",
+    examples:[["I <em>can</em> swim very well.","Saya bisa berenang dengan baik."],["You <em>must</em> wear a seatbelt.","Kamu harus memakai sabuk pengaman."],["You <em>should</em> see a doctor.","Kamu sebaiknya periksa ke dokter."]],
+    practice:[{q:"You ___ smoke in the hospital.",options:["must not","can","should"],answer:"must not"},
+      {q:"___ I borrow your pen?",options:["Must","May","Should"],answer:"May"}] },
+  comparatives:{ title:"Comparatives & Superlatives",
+    body:"Comparative dipakai untuk membandingkan dua hal (biasanya +er atau more + adjective). Superlative dipakai untuk menunjukkan yang paling di antara tiga hal atau lebih (biasanya +est atau most + adjective, didahului 'the').",
+    examples:[["This book is <em>more interesting</em> than that one.","Buku ini lebih menarik daripada yang itu."],["She is <em>taller</em> than her brother.","Dia lebih tinggi daripada kakaknya."],["This is <em>the most beautiful</em> place I've ever seen.","Ini tempat paling indah yang pernah saya lihat."]],
+    practice:[{q:"This is ___ (cheap) than that one.",options:["cheaper","more cheap","cheapest"],answer:"cheaper"},
+      {q:"He is ___ (intelligent) student in the class.",options:["more intelligent","the most intelligent","intelligenter"],answer:"the most intelligent"}] },
+  conjunctions:{ title:"Conjunctions & Linking Words",
+    body:"Konjungsi menghubungkan kata, frasa, atau klausa. Contoh: 'and' (dan), 'but' (tetapi), 'or' (atau), 'because' (karena), 'so' (jadi/sehingga), 'although' (meskipun).",
+    examples:[["I like tea <em>and</em> coffee.","Saya suka teh dan kopi."],["She was tired, <em>but</em> she kept working.","Dia lelah, tetapi dia terus bekerja."],["<em>Although</em> it was raining, we went out.","Meskipun hujan, kami tetap keluar."]],
+    practice:[{q:"I stayed home ___ I was sick.",options:["because","but","or"],answer:"because"},
+      {q:"___ he studied hard, he failed the test.",options:["Because","Although","So"],answer:"Although"}] },
+  conditionals:{ title:"Conditionals",
+    body:"Kalimat conditional (pengandaian) punya beberapa tipe: Zero Conditional (fakta umum: If + present, present), First Conditional (kemungkinan nyata: If + present, will + verb), Second Conditional (pengandaian tidak nyata di masa sekarang: If + past, would + verb), Third Conditional (pengandaian tidak nyata di masa lalu: If + past perfect, would have + verb 3).",
+    examples:[["If it <em>rains</em>, the ground <em>gets</em> wet.","Jika hujan, tanah menjadi basah (fakta umum)."],["If I <em>have</em> time, I <em>will help</em> you.","Jika saya punya waktu, saya akan membantumu."],["If I <em>were</em> rich, I <em>would travel</em> the world.","Jika saya kaya, saya akan berkeliling dunia."],["If she <em>had studied</em>, she <em>would have passed</em>.","Jika dia belajar, dia akan lulus (kenyataannya tidak)."]],
+    practice:[{q:"If I ___ (win) the lottery, I would buy a house.",options:["win","won","had won"],answer:"won"},
+      {q:"If you heat ice, it ___ (melt).",options:["melts","melted","will melt"],answer:"melts"},
+      {q:"If she had studied harder, she ___ (pass) the exam.",options:["would pass","would have passed","passed"],answer:"would have passed"}] },
+  passive:{ title:"Passive Voice",
+    body:"Kalimat pasif menekankan objek yang menerima aksi, bukan pelaku aksinya. Rumus: Subjek(objek asli) + to be + Verb 3 (+ by + pelaku).",
+    examples:[["The cake <em>was made</em> by my mother.","Kue itu dibuat oleh ibu saya."],["The letter <em>is written</em> by him.","Surat itu ditulis olehnya."],["The window <em>was broken</em> by the boy.","Jendela itu dipecahkan oleh anak laki-laki itu."]],
+    practice:[{q:"The house ___ (build) in 1990.",options:["was built","built","is build"],answer:"was built"},
+      {q:"English ___ (speak) all over the world.",options:["is spoken","speaks","spoke"],answer:"is spoken"}] },
+  relative:{ title:"Relative Clauses",
+    body:"Relative clause memberikan informasi tambahan tentang kata benda dengan kata penghubung seperti who (orang), which (benda), that (orang/benda), where (tempat), whose (kepemilikan).",
+    examples:[["The man <em>who</em> lives next door is a doctor.","Pria yang tinggal di sebelah adalah seorang dokter."],["This is the book <em>which</em> I bought yesterday.","Ini buku yang saya beli kemarin."],["That's the house <em>where</em> I grew up.","Itu rumah tempat saya tumbuh besar."]],
+    practice:[{q:"The girl ___ is standing there is my sister.",options:["who","which","where"],answer:"who"},
+      {q:"This is the car ___ I want to buy.",options:["who","which","whose"],answer:"which"}] },
+  gerunds:{ title:"Gerunds & Infinitives",
+    body:"Gerund adalah kata kerja + -ing yang berfungsi sebagai kata benda (Swimming is fun). Infinitive adalah 'to' + kata kerja dasar (I want to swim). Beberapa kata kerja diikuti gerund, beberapa diikuti infinitive, tergantung kata kerjanya.",
+    examples:[["<em>Swimming</em> is my favorite hobby.","Berenang adalah hobi favorit saya."],["I want <em>to travel</em> next year.","Saya ingin bepergian tahun depan."],["She enjoys <em>reading</em> novels.","Dia menikmati membaca novel."]],
+    practice:[{q:"I enjoy ___ (read) books.",options:["reading","to read","read"],answer:"reading"},
+      {q:"She wants ___ (learn) English.",options:["learning","to learn","learn"],answer:"to learn"}] },
+  complex:{ title:"Complex Sentences",
+    body:"Kalimat kompleks terdiri dari satu klausa independen (bisa berdiri sendiri) dan satu atau lebih klausa dependen (tidak bisa berdiri sendiri), dihubungkan dengan kata seperti 'because', 'when', 'if', 'although', 'since'.",
+    examples:[["<em>Because it was raining</em>, we stayed home.","Karena hujan, kami tinggal di rumah."],["I will call you <em>when I arrive</em>.","Saya akan meneleponmu ketika saya tiba."],["<em>Although she was tired</em>, she finished the project.","Meskipun dia lelah, dia menyelesaikan proyek itu."]],
+    practice:[{q:"___ he was late, he missed the bus.",options:["Because","But","And"],answer:"Because"},
+      {q:"I'll wait here ___ you come back.",options:["until","but","or"],answer:"until"}] }
+};
+
+const ROADMAP = [
+  { section:"8 Tenses Pertama", items:[
+    {id:"spresent",title:"1. Simple Present"},{id:"pcont",title:"2. Present Continuous"},
+    {id:"pperfect",title:"3. Present Perfect"},{id:"pperfectcont",title:"4. Present Perfect Continuous"},
+    {id:"spast",title:"5. Simple Past"},{id:"pastcont",title:"6. Past Continuous"},
+    {id:"pastperfect",title:"7. Past Perfect"},{id:"pastperfectcont",title:"8. Past Perfect Continuous"} ]},
+  { section:"Subject–Verb Agreement", items:[ {id:"sva",title:"Subject–Verb Agreement",badge:"Sedang dipelajari"} ]},
+  { section:"8 Tenses Sisanya — Future", items:[
+    {id:"sfuture",title:"9. Simple Future"},{id:"fcont",title:"10. Future Continuous"},
+    {id:"fperfect",title:"11. Future Perfect"},{id:"fperfectcont",title:"12. Future Perfect Continuous"} ]},
+  { section:"Future in the Past", items:[
+    {id:"fitp",title:"13. Future in the Past"},{id:"fcitp",title:"14. Future Continuous in the Past"},
+    {id:"fpitp",title:"15. Future Perfect in the Past"},{id:"fpcitp",title:"16. Future Perfect Continuous in the Past"} ]},
+  { section:"Review", items:[ {id:"review16",title:"Review Semua 16 Tenses"} ]},
+  { section:"Lainnya", items:[
+    {id:"articles",title:"Articles (A / An / The)"},{id:"prepositions",title:"Prepositions"},
+    {id:"pronouns2",title:"Pronouns (I/Me, He/Him, dst)"},{id:"countable",title:"Countable & Uncountable Nouns"},
+    {id:"modals",title:"Modal Verbs"},{id:"comparatives",title:"Comparatives & Superlatives"},
+    {id:"conjunctions",title:"Conjunctions & Linking Words"},{id:"conditionals",title:"Conditionals"},
+    {id:"passive",title:"Passive Voice"},{id:"relative",title:"Relative Clauses"},
+    {id:"gerunds",title:"Gerunds & Infinitives"},{id:"complex",title:"Complex Sentences"} ]}
+];
+
+const READINGS = [
+  { title:"My Daily Routine",
+    text:"My name is Sari. I wake up at six in the morning. I eat breakfast and then I go to work by bus. I work from eight to four. In the evening, I cook dinner for my family. Before I sleep, I read a book for thirty minutes.",
+    questions:[
+      {q:"What time does Sari wake up?",options:["Six in the morning","Eight in the morning","Four in the afternoon"],answer:"Six in the morning"},
+      {q:"How does Sari go to work?",options:["By car","By bus","On foot"],answer:"By bus"},
+      {q:"What does Sari do before she sleeps?",options:["She cooks dinner","She reads a book","She goes to work"],answer:"She reads a book"}]},
+  { title:"A Trip to the Market",
+    text:"Last Sunday, Budi went to the market with his mother. They bought fresh vegetables, fruits, and fish. The market was very crowded. After shopping, they had lunch at a small food stall near the market.",
+    questions:[
+      {q:"Who did Budi go to the market with?",options:["His father","His mother","His friend"],answer:"His mother"},
+      {q:"What did they buy?",options:["Clothes and shoes","Vegetables, fruits, and fish","Books and pens"],answer:"Vegetables, fruits, and fish"},
+      {q:"What did they do after shopping?",options:["They went home immediately","They had lunch at a food stall","They went to another market"],answer:"They had lunch at a food stall"}]}
+];
+
+const STORAGE_KEY = "belajar-inggris-progress-v2";
+function defaultState(){
+  return { name:"", level:null, onboarded:false, vocabLearned:{}, lessonsDone:{},
+    quizBest:{grammar:0,vocabulary:0,reading:0}, streak:{count:0,last:null} };
+}
+let STATE = defaultState();
+let dbCap=null, userCap=null, uid=null;
+
+function loadLocal(){
+  try{ const raw=localStorage.getItem(STORAGE_KEY); if(raw) STATE=Object.assign(defaultState(),JSON.parse(raw)); }catch(e){}
+}
+function saveLocal(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); }catch(e){} }
+function saveState(){
+  saveLocal();
+  if(dbCap && uid){ dbCap.doc("data/users/"+uid+"/profile").set(STATE).catch(()=>{}); }
+}
+function updateStreak(){
+  const today = new Date().toISOString().slice(0,10);
+  if(STATE.streak.last === today) return;
+  const y = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  STATE.streak.count = (STATE.streak.last === y) ? (STATE.streak.count||0)+1 : 1;
+  STATE.streak.last = today;
+}
+
+async function initCapabilities(){
+  try{
+    userCap = await window.claude?.use?.("user") || null;
+    dbCap = await window.claude?.use?.("db") || null;
+    if(userCap){
+      const me = await userCap.me();
+      uid = me.id;
+      if(!STATE.name && me.name) STATE.name = me.name;
+      const nameInput = document.getElementById("onb-name");
+      if(nameInput && !nameInput.value && me.name) nameInput.value = me.name;
+    }
+    if(dbCap && uid){
+      const snap = await dbCap.doc("data/users/"+uid+"/profile").get();
+      if(snap.exists){ STATE = Object.assign(defaultState(), snap.data()); }
+    }
+  }catch(e){ /* design for absence */ }
+  document.getElementById("sync-note").textContent = (dbCap && uid)
+    ? "Progres kamu tersinkron ke akun claude.ai ini."
+    : "Progres kamu tersimpan di browser ini saja.";
+  updateStreak();
+  saveState();
+  boot();
+}
+
+function goPage(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(name).classList.add("active");
+  document.querySelector(`.tab-btn[data-page="${name}"]`).classList.add("active");
+  if(name==="dashboard") renderDashboard();
+  if(name==="lesson"){ document.getElementById("lesson-detail").style.display="none"; document.getElementById("lesson-list-panel").style.display="block"; renderRoadmap(); }
+  if(name==="progress") renderProgress();
+  if(name==="practice") backToPracticeMenu();
+}
+document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",()=>goPage(btn.dataset.page)));
+
+document.querySelectorAll("#onb-level button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("#onb-level button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+  });
+});
+document.getElementById("onb-start").addEventListener("click",()=>{
+  const name = document.getElementById("onb-name").value.trim() || "Pelajar";
+  const level = document.querySelector("#onb-level button.active").dataset.lvl;
+  STATE.name = name; STATE.level = level; STATE.onboarded = true;
+  saveState();
+  document.getElementById("onboarding-page").style.display="none";
+  document.getElementById("app").style.display="block";
+  renderAll();
+});
+
+function boot(){
+  if(STATE.onboarded){
+    document.getElementById("onboarding-page").style.display="none";
+    document.getElementById("app").style.display="block";
+    renderAll();
+  } else {
+    document.getElementById("onboarding-page").style.display="block";
+    document.getElementById("app").style.display="none";
+  }
+}
+function renderAll(){
+  document.getElementById("who-label").textContent = STATE.name ? ("Masuk sebagai "+STATE.name) : "";
+  renderDashboard(); renderCatList(); renderCard(); renderRoadmap(); renderPracticeBest(); renderProgress();
+}
+
+function totalLessonCount(){ return ROADMAP.reduce((a,s)=>a+s.items.length,0); }
+function lessonsDoneCount(){ return Object.keys(STATE.lessonsDone).filter(k=>STATE.lessonsDone[k]).length; }
+function totalVocabCount(){ return Object.values(VOCAB).reduce((a,l)=>a+l.length,0); }
+function vocabLearnedCount(){
+  let n=0; Object.keys(STATE.vocabLearned).forEach(cat=>{ n += Object.keys(STATE.vocabLearned[cat]||{}).length; }); return n;
+}
+function renderDashboard(){
+  document.getElementById("dash-greeting").textContent = "Halo, " + (STATE.name||"Pelajar") + "!";
+  document.getElementById("dash-level").textContent = STATE.level || "-";
+  const totalL = totalLessonCount(), doneL = lessonsDoneCount();
+  const totalV = totalVocabCount(), doneV = vocabLearnedCount();
+  document.getElementById("dash-stats").innerHTML = `
+    <div class="stat-card"><div class="num">${doneL}/${totalL}</div><div class="lbl">Lesson selesai</div></div>
+    <div class="stat-card"><div class="num">${doneV}/${totalV}</div><div class="lbl">Kosakata dihafal</div></div>
+    <div class="stat-card"><div class="num">${STATE.streak.count||0}</div><div class="lbl">Hari beruntun</div></div>`;
+}
+document.getElementById("dash-continue").addEventListener("click",()=>{
+  goPage("lesson");
+  const next = ROADMAP.flatMap(s=>s.items).find(it=>!it.locked && !STATE.lessonsDone[it.id]);
+  if(next) openLesson(next.id);
+});
+
+let currentCat = Object.keys(VOCAB)[0], cardIndex=0;
+function renderCatList(){
+  const el=document.getElementById("cat-list"); el.innerHTML="";
+  Object.keys(VOCAB).forEach(cat=>{
+    const b=document.createElement("button"); b.textContent=cat;
+    if(cat===currentCat) b.classList.add("active");
+    b.onclick=()=>{ currentCat=cat; cardIndex=0; renderCatList(); renderCard(); };
+    el.appendChild(b);
+  });
+}
+function renderCard(){
+  const list=VOCAB[currentCat]; const pair=list[cardIndex];
+  document.getElementById("word-en").textContent=pair[0];
+  document.getElementById("word-id").textContent=pair[1];
+  document.getElementById("flashcard").classList.remove("flipped");
+  document.getElementById("card-counter").textContent=`Kartu ${cardIndex+1} dari ${list.length}`;
+  const learnedSet = STATE.vocabLearned[currentCat]||{};
+  document.getElementById("learn-btn").textContent = learnedSet[cardIndex] ? "✓ Sudah dihafal" : "✓ Sudah hafal";
+}
+function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+function nextCard(){ const l=VOCAB[currentCat]; cardIndex=(cardIndex+1)%l.length; renderCard(); }
+function prevCard(){ const l=VOCAB[currentCat]; cardIndex=(cardIndex-1+l.length)%l.length; renderCard(); }
+function markLearned(){
+  if(!STATE.vocabLearned[currentCat]) STATE.vocabLearned[currentCat]={};
+  STATE.vocabLearned[currentCat][cardIndex]=true;
+  saveState(); renderCard(); renderDashboard();
+}
+
+function renderRoadmap(){
+  const el=document.getElementById("roadmap"); el.innerHTML="";
+  ROADMAP.forEach(sec=>{
+    let html = `<div class="road-section"><h3>${sec.section}</h3>`;
+    sec.items.forEach(it=>{
+      const done = !!STATE.lessonsDone[it.id];
+      const locked = !!it.locked;
+      html += `<div class="road-item ${locked?'locked':''}" data-id="${it.id}" data-locked="${locked}">
+        <div><div class="rt">${it.title}</div>${it.badge?`<div class="rs">${it.badge}</div>`:''}</div>
+        <div>${locked?'<span class="lock">🔒</span>':(done?'<span class="check">✓</span>':'')}</div>
+      </div>`;
+    });
+    html += `</div>`;
+    el.insertAdjacentHTML("beforeend", html);
+  });
+  el.querySelectorAll(".road-item").forEach(row=>{
+    row.addEventListener("click",()=>{
+      if(row.dataset.locked==="true"){
+        alert("Pelajaran ini belum tersedia. Minta Claude untuk menambahkannya kapan saja!");
+        return;
+      }
+      openLesson(row.dataset.id);
+    });
+  });
+}
+let lessonProgressTemp = {};
+function openLesson(id){
+  const l = LESSON_CONTENT[id]; if(!l) return;
+  document.getElementById("lesson-list-panel").style.display="none";
+  const det = document.getElementById("lesson-detail");
+  det.style.display="block";
+  lessonProgressTemp[id] = lessonProgressTemp[id] || l.practice.map(()=>false);
+  const exHtml = l.examples.map(pair=>`<div class="example">${pair[0]}<br><span style="opacity:.7">${pair[1]}</span></div>`).join("");
+  const practiceHtml = l.practice.map((p,i)=>`
+    <div class="practice-item">
+      <p class="q">${p.q}</p>
+      <div class="opt-row" id="lp-${id}-${i}">${p.options.map(o=>`<button data-opt="${o}">${o}</button>`).join("")}</div>
+      <div class="fb" id="lpfb-${id}-${i}"></div>
+    </div>`).join("");
+  det.innerHTML = `
+    <button class="back" onclick="closeLesson()">← Kembali ke daftar</button>
+    <h2>${l.title}</h2>
+    <p style="line-height:1.6;">${l.body}</p>
+    ${exHtml}
+    <h3 style="margin-top:1rem; font-size:.95rem; color:var(--navy);">Latihan</h3>
+    ${practiceHtml}
+  `;
+  l.practice.forEach((p,i)=>{
+    document.querySelectorAll(`#lp-${id}-${i} button`).forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const chosen = btn.dataset.opt;
+        const fb = document.getElementById(`lpfb-${id}-${i}`);
+        document.querySelectorAll(`#lp-${id}-${i} button`).forEach(b=>b.classList.remove("correct","wrong"));
+        if(chosen===p.answer){
+          btn.classList.add("correct"); fb.textContent="Benar!"; fb.className="fb ok";
+          lessonProgressTemp[id][i]=true;
+          if(lessonProgressTemp[id].every(Boolean) && !STATE.lessonsDone[id]){
+            STATE.lessonsDone[id]=true; saveState(); renderDashboard();
+          }
+        } else {
+          btn.classList.add("wrong"); fb.textContent="Belum tepat, coba lagi."; fb.className="fb bad";
+        }
+      });
+    });
+  });
+}
+function closeLesson(){
+  document.getElementById("lesson-detail").style.display="none";
+  document.getElementById("lesson-list-panel").style.display="block";
+  renderRoadmap();
+}
+
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function renderPracticeBest(){
+  document.getElementById("best-grammar").textContent = STATE.quizBest.grammar>0 ? `Skor terbaik: ${STATE.quizBest.grammar}%` : "";
+  document.getElementById("best-vocabulary").textContent = STATE.quizBest.vocabulary>0 ? `Skor terbaik: ${STATE.quizBest.vocabulary}%` : "";
+  document.getElementById("best-reading").textContent = STATE.quizBest.reading>0 ? `Skor terbaik: ${STATE.quizBest.reading}%` : "";
+}
+function backToPracticeMenu(){
+  document.getElementById("practice-menu").style.display="block";
+  document.getElementById("quiz-area-panel").style.display="none";
+  document.getElementById("reading-area-panel").style.display="none";
+  document.getElementById("quiz-result-panel").style.display="none";
+  renderPracticeBest();
+}
+
+function buildGrammarPool(){
+  const pool=[];
+  Object.keys(LESSON_CONTENT).forEach(id=>{
+    LESSON_CONTENT[id].practice.forEach(p=>pool.push({q:p.q, options:shuffle(p.options), answer:p.answer}));
+  });
+  return pool;
+}
+function buildVocabPool(){
+  const pool=[];
+  Object.keys(VOCAB).forEach(cat=>{
+    VOCAB[cat].forEach(pair=>{
+      const en=pair[0], id=pair[1];
+      const others = VOCAB[cat].filter(p=>p[0]!==en).map(p=>p[1]);
+      const distractors = shuffle(others).slice(0,2);
+      pool.push({ q:`Apa arti dari "${en}"?`, options: shuffle([id, ...distractors]), answer: id });
+    });
+  });
+  return pool;
+}
+
+let quizType=null, quizQuestions=[], quizIndex=0, quizCorrect=0;
+function startQuiz(type){
+  quizType = type;
+  const pool = type==="grammar" ? buildGrammarPool() : buildVocabPool();
+  quizQuestions = shuffle(pool).slice(0,8);
+  quizIndex=0; quizCorrect=0;
+  document.getElementById("practice-menu").style.display="none";
+  document.getElementById("reading-area-panel").style.display="none";
+  document.getElementById("quiz-result-panel").style.display="none";
+  document.getElementById("quiz-area-panel").style.display="block";
+  showQuizQuestion();
+}
+function showQuizQuestion(){
+  const item = quizQuestions[quizIndex];
+  document.getElementById("qz-progress").textContent = `Soal ${quizIndex+1} dari ${quizQuestions.length}`;
+  document.getElementById("qz-bar-fill").style.width = `${(quizIndex/quizQuestions.length)*100}%`;
+  document.getElementById("qz-question").textContent = item.q;
+  document.getElementById("qz-fb").textContent = "";
+  const optEl = document.getElementById("qz-options"); optEl.innerHTML="";
+  item.options.forEach(o=>{
+    const b=document.createElement("button"); b.textContent=o; b.onclick=()=>answerQuiz(o,b); optEl.appendChild(b);
+  });
+}
+function answerQuiz(chosen, btn){
+  const item = quizQuestions[quizIndex];
+  document.querySelectorAll("#qz-options button").forEach(b=>{ b.disabled=true; if(b.textContent===item.answer) b.classList.add("correct"); });
+  const fb = document.getElementById("qz-fb");
+  if(chosen===item.answer){ quizCorrect++; fb.textContent="Benar!"; fb.className="fb ok"; }
+  else { btn.classList.add("wrong"); fb.textContent=`Kurang tepat. Jawaban: ${item.answer}`; fb.className="fb bad"; }
+  setTimeout(()=>{ quizIndex++; if(quizIndex>=quizQuestions.length){ finishQuiz(); } else { showQuizQuestion(); } }, 800);
+}
+function finishQuiz(){
+  document.getElementById("quiz-area-panel").style.display="none";
+  document.getElementById("quiz-result-panel").style.display="block";
+  const pct = Math.round((quizCorrect/quizQuestions.length)*100);
+  document.getElementById("qz-score").textContent = `${quizCorrect}/${quizQuestions.length}`;
+  let msg = "Terus berlatih, kamu pasti bisa!";
+  if(pct>=80) msg = "Luar biasa! Kamu sudah cukup siap lanjut ke bagian berikutnya.";
+  else if(pct>=50) msg = "Bagus! Ulangi beberapa materi yang masih terasa sulit.";
+  document.getElementById("qz-message").textContent = msg;
+  if(pct>STATE.quizBest[quizType]){ STATE.quizBest[quizType]=pct; saveState(); }
+  renderDashboard();
+}
+
+function startReadingQuiz(){
+  const passage = READINGS[Math.floor(Math.random()*READINGS.length)];
+  document.getElementById("practice-menu").style.display="none";
+  document.getElementById("quiz-area-panel").style.display="none";
+  document.getElementById("quiz-result-panel").style.display="none";
+  const panel = document.getElementById("reading-area-panel");
+  panel.style.display="block";
+  const qHtml = passage.questions.map((p,i)=>`
+    <div class="reading-q">
+      <p class="q">${i+1}. ${p.q}</p>
+      <div class="opt-row" id="rq-${i}">${shuffle(p.options).map(o=>`<button data-opt="${o}">${o}</button>`).join("")}</div>
+    </div>`).join("");
+  panel.innerHTML = `
+    <h2>${passage.title}</h2>
+    <div class="reading-box">${passage.text}</div>
+    ${qHtml}
+    <button class="stampbtn" id="rq-check">Cek Jawaban</button>
+  `;
+  const answers = {};
+  passage.questions.forEach((p,i)=>{
+    document.querySelectorAll(`#rq-${i} button`).forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        document.querySelectorAll(`#rq-${i} button`).forEach(b=>b.style.outline="none");
+        btn.style.outline = "2px solid var(--navy)";
+        answers[i]=btn.dataset.opt;
+      });
+    });
+  });
+  document.getElementById("rq-check").addEventListener("click",()=>{
+    let correct=0;
+    passage.questions.forEach((p,i)=>{
+      const chosen = answers[i];
+      document.querySelectorAll(`#rq-${i} button`).forEach(b=>{
+        if(b.textContent===p.answer) b.classList.add("correct");
+        else if(b.dataset.opt===chosen) b.classList.add("wrong");
+      });
+      if(chosen===p.answer) correct++;
+    });
+    const pct = Math.round((correct/passage.questions.length)*100);
+    setTimeout(()=>{
+      panel.style.display="none";
+      document.getElementById("quiz-result-panel").style.display="block";
+      document.getElementById("qz-score").textContent = `${correct}/${passage.questions.length}`;
+      let msg = "Terus berlatih membaca teks bahasa Inggris ya!";
+      if(pct>=80) msg = "Bagus sekali, pemahamanmu sudah kuat!";
+      else if(pct>=50) msg = "Lumayan, coba baca ulang bagian yang belum jelas.";
+      document.getElementById("qz-message").textContent = msg;
+      if(pct>STATE.quizBest.reading){ STATE.quizBest.reading=pct; saveState(); }
+      renderDashboard();
+    }, 600);
+  });
+}
+
+function renderProgress(){
+  const totalL=totalLessonCount(), doneL=lessonsDoneCount();
+  const totalV=totalVocabCount(), doneV=vocabLearnedCount();
+  const grammarPct = Math.round((doneL/totalL)*100);
+  const vocabPct = Math.round((doneV/totalV)*100);
+  const overall = Math.round((grammarPct+vocabPct)/2);
+  document.getElementById("p-overall-pct").textContent = overall+"%";
+  document.getElementById("p-overall-fill").style.width = overall+"%";
+  document.getElementById("p-grammar-label").textContent = `${doneL}/${totalL} pelajaran`;
+  document.getElementById("p-grammar-pct").textContent = grammarPct+"%";
+  document.getElementById("p-grammar-fill").style.width = grammarPct+"%";
+  document.getElementById("p-vocab-label").textContent = `${doneV}/${totalV} kata`;
+  document.getElementById("p-vocab-pct").textContent = vocabPct+"%";
+  document.getElementById("p-vocab-fill").style.width = vocabPct+"%";
+  document.getElementById("qs-grammar").textContent = STATE.quizBest.grammar>0 ? STATE.quizBest.grammar+"%" : "Belum dicoba";
+  document.getElementById("qs-vocabulary").textContent = STATE.quizBest.vocabulary>0 ? STATE.quizBest.vocabulary+"%" : "Belum dicoba";
+  document.getElementById("qs-reading").textContent = STATE.quizBest.reading>0 ? STATE.quizBest.reading+"%" : "Belum dicoba";
+  document.getElementById("p-streak").textContent = STATE.streak.count||0;
+}
+
+loadLocal();
+initCapabilities();
+</script>
+</body>
+</html>
